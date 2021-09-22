@@ -8,11 +8,13 @@ public class Battle {
                 int turn = 1;
                 boolean isFightEnded = false;
                 while (!isFightEnded){
+                    System.out.println("--------------------------------------------------");
                     System.out.println("Ход " + turn);
+                    System.out.println("--------------------------------------------------");
                     if(turn++ % 2 !=0){
                         isFightEnded = makeHit(attacker, defender, callback);
                     } else {
-                        isFightEnded = makeHit(attacker, defender, callback);
+                        isFightEnded = makeHit(defender, attacker, callback);
                     }
                     try{
                         Thread.sleep(1000);
@@ -30,10 +32,10 @@ public class Battle {
             System.out.println(String.format("%s Нанес удар в %d единиц!", attacker.getName(), hit));
             System.out.println(String.format("У %s осталось %d единиц здоровья...", defender.getName(), defenderHealth));
         } else {
-            System.out.println(String.format(""));
+            System.out.println(String.format("%s промахнулся!", attacker.getName()));
         }
         if (defenderHealth <= 0 && defender instanceof Hero){
-            System.out.println("Вы умкерли");
+            System.out.println("Вы умерли");
             callback.fightLost();
             return true;
         } else if (defenderHealth <= 0){

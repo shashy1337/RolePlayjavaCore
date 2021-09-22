@@ -10,40 +10,51 @@ public class World {
     private static Entity entityPlayer = null;
     private static Battle battle = null;
 
+
     public static void main(String[] args) {
-        scanner = new Scanner(System.in);
-        battle = new Battle();
-        System.out.println("Добро пожаловать в рпг");
-        commands();
-        theJourneyBegins(scanner.nextInt());
+
+        try {
+            scanner = new Scanner(System.in);
+            battle = new Battle();
+            System.out.println("Добро пожаловать в рпг");
+            commands();
+            theJourneyBegins(scanner.nextLine());
+        } catch (StackOverflowError e){e.printStackTrace();}
+
     }
 
-    public static void theJourneyBegins(int command) {
-        int getCommand = scanner.nextInt();
-        if (entityPlayer == null) {
-            entityPlayer = new Hero("George", 250, 35, 10, 0, 0);
-            System.out.println(String.format("ваш главный клоун создан под именем %s", entityPlayer.getName()));
-            switch (command) {
-                case 1:
-                    System.out.println("Торговец еще в разработке!");
-                    theJourneyBegins(getCommand);
-                    break;
-                case 2:
-                    System.out.println("А вот и первый slave в dungeon!");
-                    goFight();
-                    break;
-                case 3:
-                    System.out.print("Вы точно хотите выйти?да/нет?");
-                    String getAnswer = scanner.nextLine();
-                    if (getAnswer.equalsIgnoreCase("да")) {
-                        System.exit(1);
-                    } else {
-                        theJourneyBegins(getCommand);
+    public static void theJourneyBegins(String command) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (entityPlayer == null) {
+                    entityPlayer = new Hero("George", 250, 2, 10, 0, 0);
+                    System.out.println(String.format("ваш герой создан под именем %s", entityPlayer.getName()));
+                    switch (command) {
+                        case "1" -> {
+                            System.out.println("Торговец еще в разработке!");
+                            theJourneyBegins(command);
+                        }
+                        case "2" -> {
+                            System.out.println("А вот и первый slave в dungeon!");
+                            goFight();
+                        }
+                        case "3" -> {
+                            System.out.print("Вы точно хотите выйти?да/нет?");
+                            String getAnswer = scanner.nextLine();
+                            if (getAnswer.equalsIgnoreCase("да")) {
+                                System.exit(1);
+                            } else {
+                                theJourneyBegins(command);
+                            }
+                        }
                     }
-                    break;
+                }
+                theJourneyBegins(command);
+
+
             }
-        }
-        theJourneyBegins(getCommand);
+        }).start();
     }
 
     public static void goFight() {
@@ -52,7 +63,8 @@ public class World {
             public void fightWin() {
                 System.out.println(String.format("Вы победили монстра %s! Теперь у вас %d золота, а также осталось %d здоровья",
                         entityPlayer.getName(), entityPlayer.getGold(), entityPlayer.getHp()));
-                int getCommand = scanner.nextInt();
+                commands();
+                String getCommand = scanner.nextLine();
                 theJourneyBegins(getCommand);
             }
 
