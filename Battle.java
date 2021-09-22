@@ -1,6 +1,7 @@
 package RolePlayingGame;
 
 public class Battle {
+
     public void startBattle(Entity attacker, Entity defender, FightCallback callback){
         new Thread(new Runnable() {
             @Override
@@ -43,6 +44,7 @@ public class Battle {
             attacker.setXp(attacker.getXp() + defender.getXp());
             attacker.setGold(attacker.getGold() + defender.getGold());
             callback.fightWin();
+            return true;
         } else
             defender.setHp(defenderHealth);
             return false;

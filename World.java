@@ -1,25 +1,25 @@
 package RolePlayingGame;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class World {
 
     private static Scanner scanner;
-    private static Entity entityPlayer = null;
+    private static Hero entityPlayer = null;
     private static Battle battle = null;
+    private static String getCommand;
 
 
     public static void main(String[] args) {
 
-        try {
             scanner = new Scanner(System.in);
             battle = new Battle();
             System.out.println("Добро пожаловать в рпг");
             commands();
             theJourneyBegins(scanner.nextLine());
-        } catch (StackOverflowError e){e.printStackTrace();}
+
+
 
     }
 
@@ -28,12 +28,27 @@ public class World {
             @Override
             public void run() {
                 if (entityPlayer == null) {
-                    entityPlayer = new Hero("George", 250, 2, 10, 0, 0);
+                    entityPlayer = new Hero("George", 250, 50, 10, 0, 0, 0);
                     System.out.println(String.format("ваш герой создан под именем %s", entityPlayer.getName()));
+                }
                     switch (command) {
                         case "1" -> {
-                            System.out.println("Торговец еще в разработке!");
-                            theJourneyBegins(command);
+                            System.out.println("Добро пожаловать в мой магазин!Хотите ли что нибудь купить?да/нет");
+                            String request = scanner.nextLine();
+                            if (request.equalsIgnoreCase("да")){
+                                Shoper.buyPoison(entityPlayer);
+                                System.out.println(String.format("Вы купили зелье. Кол-во зельев %d", entityPlayer.getPoison()));
+                                System.out.println("Спасибо за покупку!");
+                                commands();
+                                System.out.print("Введите следующую команду: ");
+                                getCommand = scanner.nextLine();
+                                theJourneyBegins(getCommand);
+                            } else {
+                                System.out.print("Прощай друг!: ");
+                                getCommand = scanner.nextLine();
+                                theJourneyBegins(getCommand);
+                            }
+
                         }
                         case "2" -> {
                             System.out.println("А вот и первый slave в dungeon!");
@@ -45,15 +60,12 @@ public class World {
                             if (getAnswer.equalsIgnoreCase("да")) {
                                 System.exit(1);
                             } else {
-                                theJourneyBegins(command);
+                                getCommand = scanner.nextLine();
+                                theJourneyBegins(getCommand);
                             }
                         }
                     }
                 }
-                theJourneyBegins(command);
-
-
-            }
         }).start();
     }
 
